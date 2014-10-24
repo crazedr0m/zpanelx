@@ -19,9 +19,10 @@ require_once 'inc/dbc.inc.php';
 
 debug_phperrors::SetMode('dev');
 
-if (file_exists('modules/' . fs_protector::SanitiseFolderName($_GET['m']) . '/code/webservice.ext.php')) {
-    include 'modules/' . fs_protector::SanitiseFolderName($_GET['m']) . '/code/controller.ext.php';
-    include 'modules/' . fs_protector::SanitiseFolderName($_GET['m']) . '/code/webservice.ext.php';
+$sanitiseFolderPrefix = 'modules/' . fs_protector::SanitiseFolderName($_GET['m']) . '/code/';
+if (file_exists($sanitiseFolderPrefix . '/webservice.ext.php')) {
+    include $sanitiseFolderPrefix . 'controller.ext.php';
+    include $sanitiseFolderPrefix . 'webservice.ext.php';
     $api = new webservice();
 
     if ($api->wsdataarray['request'] == '') {
@@ -36,7 +37,6 @@ if (file_exists('modules/' . fs_protector::SanitiseFolderName($_GET['m']) . '/co
         if (method_exists($api, $api->wsdataarray['request'])) {
             $api->SendResponse(call_user_func(array($api, '' . $api->wsdataarray['request'] . '')));
         } else {
-            $response_nomethod = new runtime_dataobject;
             $response_nomethod = new runtime_dataobject;
             $response_nomethod->addItemValue('response', '1102');
             $response_nomethod->addItemValue('content', 'Request not found');

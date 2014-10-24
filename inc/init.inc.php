@@ -53,11 +53,11 @@ if (isset($_POST['inForgotPassword'])) {
         $phpmailer = new sys_email();
         $phpmailer->Subject = "Hosting Panel Password Reset";
         $phpmailer->Body = "Hi " . $result['ac_user_vc'] . ",
-            
+
 You, or somebody pretending to be you, has requested a password reset link to be sent for your web hosting control panel login.
-        
+
 If you wish to proceed with the password reset on your account, please use the link below to be taken to the password reset page.
-            
+
 " . $protocol . ctrl_options::GetSystemOption('zpanel_domain') . "/?resetkey=" . $randomkey . "
 
 
@@ -119,17 +119,9 @@ if (isset($_POST['inUsername'])) {
 }
 
 if (isset($_COOKIE['zUser'])) {
-    
-    if (isset($_COOKIE['zSec'])) {
-        if($_COOKIE['zSec'] == false) {
-            $secure = false;
-        } else {
-            $secure = true;
-        }
-    }else{
-        $secure = true;
-    }
-    
+
+	$secure = (!isset($_COOKIE['zSec']) || !$_COOKIE['zSec']);
+
     ctrl_auth::Authenticate($_COOKIE['zUser'], $_COOKIE['zPass'], false, true, $secure);
 }
 
